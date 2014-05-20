@@ -1,24 +1,24 @@
 # COW (Climb Over the Wall) proxy
 (English translation from https://github.com/cyfdecyf/cow)
 
-COW (Climb Over the Wall) is a simple and multifunction HTTP proxy. It can detect firewall blocked site and use seconde level upstream proxy to by passe that.
+COW (Climb Over the Wall) is a simple and multifunction HTTP proxy. It can detect firewall blocked site and use second level upstream proxy to by passe that.
 
 
 Current version: 0.9.1 [CHANGELOG](CHANGELOG)
 [![Build Status](https://travis-ci.org/cyfdecyf/cow.png?branch=master)](https://travis-ci.org/cyfdecyf/cow)
 
-**Contributions are welcome and pluse sue develop branch and pull request :)**
+**Contributions are welcome and please use develop branch for pull request :)**
 
 ## Features
 
-The main goal of COW is "automatic". Users should not be aware and care about blocked sites which will be escaped via upstream proxies till other will be accessed diretly.
+The main goal of COW is "automatic". It's transparent to users whether a site accessible directly by cow or blocked (which will be escaped then via upstream proxies).
 
 - HTTP proxy for mobile devices
-- Support HTTP, SOCKS5, [shadowsocks](https://github.com/clowwindy/shadowsocks/wiki/Shadowsocks-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E) and seconde level proxies (including COW it-self)
-  - can load-balance between multiple seconde level proxies
+- Support HTTP, SOCKS5, [shadowsocks](https://github.com/clowwindy/shadowsocks/wiki/Shadowsocks-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E) as second level proxies (including COW it-self)
+  - can load-balance between multiple second level proxies
 - automatic detection for blocked sites，and escape to upstream proxies
 - automatic PAC generation
-  - Built-in [no-proxy](site_direct.go) sites，for banking, media streaming sites（can be configured manually）
+  - Built-in [no-proxy](site_direct.go) list，for banking, media streaming sites（can be configured manually）
 
 # Quickstart
 
@@ -31,7 +31,9 @@ Installation：
 - **Windows:** [download here](http://dl.chenyufei.info/cow/)
 - If you have Go compiler, you can use also `go get github.com/cyfdecyf/cow` to build from source
 
-Simple configuration: edit `~/.cow/rc` (Linux) or `rc.txt` (Windows)，as the following sample:
+Simple configuration: 
+
+Edit `~/.cow/rc` (Linux) or `rc.txt` (Windows)，as the following sample:
 
     #This is a comment
     # local http proxy address to be used in browser for HTTP/HTTPS proxy
@@ -53,7 +55,7 @@ Simple configuration: edit `~/.cow/rc` (Linux) or `rc.txt` (Windows)，as the fo
     # on the upstream proxy, use the following:
     #listen = cow://aes-128-cfb:password@0.0.0.0:8388
 
-Then simply run cow and enjoy it.
+Then simply run cow and enjoy it ;)
 
 # Configuration details
 
@@ -71,26 +73,26 @@ Start COW：
 ##PAC (Proxy Auto Config)
 Use `http://<listen address>/pac` in your browser.
 
-**PAC can advise the browser to bypass proxy for some URL (thus better performance). But if some sites get blocked after reading PAC, the browser will not fall back. In this case, it's better NOT to use PAC but always go thru cow.**
+PAC is usefull as it can advise the browser to bypass proxy for some URLs (thus better performance). But if one site got blocked afterward, the browser will not fall back to cow. For this reason, **it's better NOT to use PAC but always go thru cow.**
 
-Some command line option can override configuration file, run `cow -h` for more details。
+Some command line options can override configuration file values, run `cow -h` for more details。
 
 ## Configure manually blocked sites and direct sites
 
-**In noraml situation you don't need to do that, but for some special case: **
+**In noraml situation you don't need to do that, but for some special case:**
 
 `~/.cow/blocked` and `~/.cow/direct` many define blocked and direct sites（`direct` host will be part of PAC）：
 
-- One line per site or URL (cow will check for sit prior to check URL)
-  - seconde level domain like `google.com` equals to `*.google.com`
-  - sub-domain under some generic seconde level domain (like `google.com.hk` for `com.hk`, `edu.cn`) equals to all sub-sub-dmains like `*.google.com.hk`
-  - other domains should excat like `plus.google.com`
+- One line per site or URL (cow will check for site prior to check URL)
+  - second level domain like `google.com` equals to `*.google.com`
+  - sub-domain under some generic second level domain (like `google.com.hk` for `com.hk`, `edu.cn`) equals to all sub-sub-dmains like `*.google.com.hk`
+  - other domains will be exact match like `plus.google.com`
 
 Caution: All private ip (RFC 1918) **and** non-fqdn names will be considered as `diret site` and will not use cow.
 
 # Technical details
 
-## proxy log
+## Proxy stat
 
 COW store direct/blocked json formatted statistics in `~/.cow/stat`.
 
